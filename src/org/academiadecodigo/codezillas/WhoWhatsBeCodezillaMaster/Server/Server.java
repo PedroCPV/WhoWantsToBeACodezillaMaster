@@ -34,7 +34,7 @@ public class Server {
     public void start() {
         int connections = 0;
 
-        while (bindSocket.isBound() && connections < 2) {
+        while (bindSocket.isBound() && connections < 1) {
             connections++;
 
             waitConnection(connections);

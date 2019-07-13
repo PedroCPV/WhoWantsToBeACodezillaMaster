@@ -15,11 +15,11 @@ public class MainTests {
             Server server = new Server(questionsBucket, 8888);
             server.start();
 
-            questionsBucket.questionsInit();
-            Prompt prompt = new Prompt(System.in, System.out);
-            int hhhh = server.selectionQuestion();
-            System.out.println(hhhh);
-            server.checkAnswer( prompt.getUserInput(questionsBucket.getHashMap().get(1).getQuestionsMenu()), hhhh);
+           // questionsBucket.questionsInit();
+            //Prompt prompt = new Prompt(System.in, System.out);
+            //int hhhh = server.selectionQuestion();
+            //System.out.println(hhhh);
+            //server.checkAnswer( prompt.getUserInput(questionsBucket.getHashMap().get(1).getQuestionsMenu()), hhhh);
         } catch (IOException io) {
             io.getStackTrace();
         }

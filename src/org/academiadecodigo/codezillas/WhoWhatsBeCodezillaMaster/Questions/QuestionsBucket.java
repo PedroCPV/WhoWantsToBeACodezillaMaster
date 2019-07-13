@@ -12,7 +12,7 @@ public class QuestionsBucket {
         numOfQuestions = 0;
     }
 
-    public void newQuestion(String question, String optionA, String optionB, String optionC, String optionD, int validIndex) {
+    public void addNewQuestion(String question, String optionA, String optionB, String optionC, String optionD, int validIndex) {
         Question newQuestion = new Question(question, optionA, optionB, optionC, optionD, validIndex);
         numOfQuestions++;
         hashMap.put(numOfQuestions, newQuestion);
@@ -24,6 +24,6 @@ public class QuestionsBucket {
 
     //TODO: Make Questions PEEPS!
     public void questionsInit() {
-        newQuestion("pergunta", "A", "B", "C", "D", 2);
+        addNewQuestion("pergunta", "A", "B", "C", "D", 2);
     }
 }
