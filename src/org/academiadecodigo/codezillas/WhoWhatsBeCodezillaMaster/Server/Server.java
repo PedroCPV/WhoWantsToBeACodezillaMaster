@@ -25,10 +25,49 @@ public class Server {
 
     public Server(/*QuestionsBucket questionsBucket*/int port) throws IOException {
         bindSocket = new ServerSocket(port);
-        pool = Executors.newCachedThreadPool();
+        pool = Executors.newFixedThreadPool(2);
         clients = Collections.synchronizedList(new LinkedList<>());
         //this.questionsBucket = questionsBucket;
     }
+
+    public void start() {
+        int connections = 0;
+
+        while(bindSocket.isBound() && connections < 2) {
+            connections++;
+
+            waitConnection(connections);
+            System.out.println("oi" + connections);
+        }
+
+    }
+
+    private void waitConnection(int connections) {
+        try {
+            Socket clientSocket = bindSocket.accept();
+            ClientConnection connection = new ClientConnection(clientSocket,this, DEFAULT_NAME + connections);
+            pool.submit(connection);
+
+        } catch (IOException io) {
+            io.getStackTrace();
+        }
+    }
+
+    public boolean addClient(ClientConnection client) {
+        synchronized (clients) {
+            if (clients.size() > 2) {
+                return false;
+            }
+            clients.add(client);
+            return true;
+        }
+    }
+
+
+
+
+    //TODO: remove client from list
+
 
     //TODO: Player input Answer verify (this logic make sense stay in the "game judge")
     public int checkAnswer(int numChooseOption, int questionHasMapID) {
@@ -41,56 +80,6 @@ public class Server {
             return 0;
         }
     }
-
-    public void start() {
-        int connections = 0;
-
-        while(connections < 2) {
-            waitConnection(connections);
-            connections++;
-        }
-    }
-
-    private void waitConnection(int connections) {
-        try {
-            Socket clientSocket = bindSocket.accept();
-            ClientConnection connection = new ClientConnection(clientSocket,this, DEFAULT_NAME + connections);
-            pool.submit(connection);
-        } catch (IOException io) {
-            io.getStackTrace();
-        }
-    }
-
-    public boolean addClient(ClientConnection client) {
-        synchronized (clients) {
-            if (clients.size() < 2) {
-                return false;
-            }
-            broadcast(client.getName() + " " + "joined" );
-            clients.add(client);
-            return true;
-        }
-    }
-
-    public void broadcast(String message) {
-        synchronized (clients) {
-            for (ClientConnection client : clients) {
-                client.send(message);
-            }
-        }
-    }
-
-
-
-
-
-
-
-
-    //TODO: remove client from list
-
-
-
 
 
 
