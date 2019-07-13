@@ -18,12 +18,12 @@ public class QuestionsBucket {
         hashMap.put(numOfQuestions, newQuestion);
     }
 
-   public HashMap<Integer, Question> getHashMap() {
+    public HashMap<Integer, Question> getHashMap() {
         return hashMap;
-   }
+    }
 
     //TODO: Make Questions PEEPS!
     public void questionsInit() {
-        newQuestion("pergunta","A","B","C","D", 2);
+        newQuestion("pergunta", "A", "B", "C", "D", 2);
     }
 }
