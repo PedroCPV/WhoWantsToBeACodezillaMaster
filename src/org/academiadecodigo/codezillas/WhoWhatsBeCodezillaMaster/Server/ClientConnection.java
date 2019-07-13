@@ -1,5 +1,7 @@
 package org.academiadecodigo.codezillas.WhoWhatsBeCodezillaMaster.Server;
 
+import org.academiadecodigo.bootcamp.Prompt;
+import org.academiadecodigo.bootcamp.scanners.menu.MenuInputScanner;
 import org.academiadecodigo.codezillas.WhoWhatsBeCodezillaMaster.Questions.Question;
 
 import java.io.*;
@@ -13,8 +15,9 @@ public class ClientConnection implements Runnable{
     private Server server;
     private String name;
     private PrintWriter output;
+    private Prompt prompt;
 
-    public ClientConnection(Socket socket, Server server, String name) {
+    public ClientConnection(Socket socket, Server server, String name) throws IOException {
         this.socket = socket;
         this.server = server;
         this.name = name;
@@ -24,26 +27,35 @@ public class ClientConnection implements Runnable{
     @Override
     public void run() {
         try {
-            BufferedReader in = openStreams();
-            //some message ??
+//            prompt = new Prompt(socket.getInputStream(), new PrintStream(socket.getOutputStream()));
+            prompt = new Prompt(socket.getInputStream(), System.out);
+
+            //BufferedReader in = openStreams();
+            Question question = selection();
+
+            prompt.getUserInput(question.getQuestionsMenu());
 
             if(!server.addClient(this)) {
                 System.out.println("You can't play! Try again later!");;
             }
-            while (!socket.isClosed()) {
-                listen(in);
-            }
+
+
+            /*while (!socket.isClosed()) {
+                listen(question);
+            }*/
 
         } catch (IOException io) {
             io.getStackTrace();
         }
     }
 
-    //not sure
-    private void listen(BufferedReader in) throws IOException {
-        String message = in.readLine();
+    /*
+    private void listen(Question question) throws IOException {
+        String message = question;
+    }*/
 
-
+    private Question selection() {
+        return server.getQuestionsBucket().getHashMap().get(server.selectionQuestion());
     }
 
     private BufferedReader openStreams() throws IOException {

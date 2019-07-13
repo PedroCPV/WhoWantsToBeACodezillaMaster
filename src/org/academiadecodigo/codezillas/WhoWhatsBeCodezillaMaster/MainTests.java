@@ -10,10 +10,10 @@ import java.util.Scanner;
 public class MainTests {
 
     public static void main(String[] args) {
-        QuestionsBucket questionsBucket = new QuestionsBucket();
+             QuestionsBucket questionsBucket = new QuestionsBucket();
         try {
             Server server = new Server(questionsBucket, 8888);
-            //server.start();
+            server.start();
 
             questionsBucket.questionsInit();
             Prompt prompt = new Prompt(System.in, System.out);

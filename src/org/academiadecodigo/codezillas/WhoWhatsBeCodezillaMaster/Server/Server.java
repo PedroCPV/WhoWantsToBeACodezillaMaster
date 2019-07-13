@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -33,7 +34,7 @@ public class Server {
     public void start() {
         int connections = 0;
 
-        while(bindSocket.isBound() && connections < 2) {
+        while (bindSocket.isBound() && connections < 2) {
             connections++;
 
             waitConnection(connections);
@@ -45,7 +46,7 @@ public class Server {
     private void waitConnection(int connections) {
         try {
             Socket clientSocket = bindSocket.accept();
-            ClientConnection connection = new ClientConnection(clientSocket,this, DEFAULT_NAME + connections);
+            ClientConnection connection = new ClientConnection(clientSocket, this, DEFAULT_NAME + connections);
             pool.submit(connection);
 
         } catch (IOException io) {
@@ -87,23 +88,7 @@ public class Server {
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    public QuestionsBucket getQuestionsBucket() {
+        return questionsBucket;
+    }
 }

@@ -7,7 +7,6 @@ public class Question {
     private static MenuInputScanner questionsMenu;
     private int validIndex;
 
-
     public Question(String question, String optionA, String optionB, String optionC, String optionD, int validIndex) {
 
         String[] options = {optionA, optionB, optionC, optionD};
@@ -23,4 +22,5 @@ public class Question {
     public MenuInputScanner getQuestionsMenu(){
         return questionsMenu;
     }
+
 }
