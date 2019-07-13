@@ -18,6 +18,7 @@ public class Server {
     private ServerSocket bindSocket;
     private DataInputStream message;
     private final ExecutorService pool;
+    private final List<ClientConnection> clients;
 
     public static void main(String[] args) {
         Server server = new Server();
@@ -41,6 +42,49 @@ public class Server {
             return 0;
         }
     }
+
+    public void start() {
+        int connections = 0;
+
+        while(connections < 2) {
+            waitConnection(connections);
+            connections++;
+        }
+    }
+
+    private void waitConnection(int connections) {
+        try {
+            Socket clientSocket = bindSocket.accept();
+            ClientConnection connection = new ClientConnection(clientSocket, this, );
+            pool.submit();
+        } catch (IOException io) {
+            io.getStackTrace();
+        }
+    }
+
+    public boolean addClient(ClientConnection client) {
+        synchronized (clients) {
+            if (clients.size() < 2) {
+                return false;
+            }
+            broadcast(client.getName() + " " + "joined" );
+            clients.add(client);
+            return true;
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     private void listen(int port) {
         try {
