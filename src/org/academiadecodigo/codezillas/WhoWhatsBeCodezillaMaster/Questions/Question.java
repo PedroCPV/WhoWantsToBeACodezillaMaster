@@ -19,4 +19,8 @@ public class Question {
     public int getValidIndex() {
         return validIndex;
     }
+
+    public MenuInputScanner getQuestionsMenu(){
+        return questionsMenu;
+    }
 }

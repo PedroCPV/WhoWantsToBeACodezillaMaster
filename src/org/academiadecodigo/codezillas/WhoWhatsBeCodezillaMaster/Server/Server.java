@@ -23,11 +23,11 @@ public class Server {
     private final List<ClientConnection> clients;
 
 
-    public Server(/*QuestionsBucket questionsBucket*/int port) throws IOException {
+    public Server(QuestionsBucket questionsBucket, int port) throws IOException {
         bindSocket = new ServerSocket(port);
         pool = Executors.newFixedThreadPool(2);
         clients = Collections.synchronizedList(new LinkedList<>());
-        //this.questionsBucket = questionsBucket;
+        this.questionsBucket = questionsBucket;
     }
 
     public void start() {
@@ -64,7 +64,13 @@ public class Server {
     }
 
 
+    public int selectionQuestion() {
 
+        int sortQuestion = (int) Math.floor(Math.random() * (questionsBucket.getHashMap().size()) + 1);
+//Main tests
+        questionsBucket.getHashMap().get(sortQuestion);
+        return sortQuestion;
+    }
 
     //TODO: remove client from list
 

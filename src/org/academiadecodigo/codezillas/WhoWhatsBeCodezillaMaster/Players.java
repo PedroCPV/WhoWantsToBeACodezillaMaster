@@ -19,7 +19,7 @@ public class Players {
     }
 
     public void intit() {
-        //instance Thread argument = Socket
+       // //instance Thread argument = Socket
         //Prompt receive
         //Prompt send
 
