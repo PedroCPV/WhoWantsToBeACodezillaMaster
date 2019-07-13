@@ -11,26 +11,22 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Server {
-
+    private static final String DEFAULT_NAME = "player";
     private QuestionsBucket questionsBucket;
     private ServerSocket bindSocket;
-    private DataInputStream message;
     private final ExecutorService pool;
     private final List<ClientConnection> clients;
 
-    public static void main(String[] args) {
-        Server server = new Server();
-        server.listen(9999);
-    }
 
-
-    public Server(/*QuestionsBucket questionsBucket*/) {
-        pool = Executors.newFixedThreadPool(2);
-        //clients = Collections.synchronizedList(new LinkedList<>());
+    public Server(/*QuestionsBucket questionsBucket*/int port) throws IOException {
+        bindSocket = new ServerSocket(port);
+        pool = Executors.newCachedThreadPool();
+        clients = Collections.synchronizedList(new LinkedList<>());
         //this.questionsBucket = questionsBucket;
     }
 
@@ -58,8 +54,8 @@ public class Server {
     private void waitConnection(int connections) {
         try {
             Socket clientSocket = bindSocket.accept();
-            ClientConnection connection = new ClientConnection(clientSocket, this, );
-            pool.submit();
+            ClientConnection connection = new ClientConnection(clientSocket,this, DEFAULT_NAME + connections);
+            pool.submit(connection);
         } catch (IOException io) {
             io.getStackTrace();
         }
@@ -75,6 +71,25 @@ public class Server {
             return true;
         }
     }
+
+    public void broadcast(String message) {
+        synchronized (clients) {
+            for (ClientConnection client : clients) {
+                client.send(message);
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+    //TODO: remove client from list
+
+
 
 
 
