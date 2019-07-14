@@ -52,6 +52,15 @@ public class QuestionsBucket {
         addNewQuestion("Packages in Java, together with object oriented design, will help you to organize your code, they are used for: ", "Avoiding name conflicts", "Hierarchical organization", "Access Control", "All of the above", 4);
         addNewQuestion("What are Markup Languages?", "Specifies code for formatting the logic within a layout", "The code used to specify the formatting are called posts and needs to comply to some sort of grammar", "Designed for the processing, definition and presentation of text", "Options A and C are correct", 3);
         addNewQuestion("Interfaces...", "Define a contract for the classes to follow", "Take advantage of the polymorphism benefits", "Limited by the inheritance rigid structure", "Options A and B are correct", 4);
+        addNewQuestion("What is the percentage of the lifetime cost of a piece of software goes to maintenance","10%","85%","80%","90%",3);
+        addNewQuestion("Which of the following operations is a tool for generating java decomposition ?","Jacadoc","Javaoc","Javadocumentation","Documentation.org",1);
+        addNewQuestion("What are the three fundamental technologies that are the foundation of www","HTTP,UDP,TCP" , "HTML,URL,HTTP" , "HTML,PORT,HTTP" , "HTML,URI,HTTP" , 4);
+        addNewQuestion("What are the 4 verbs that define a specific action in HTTP", "FETCH,POST,PUT,DELETE" , "EAT,SLEEP,CODE,REPEAT" , "GET,POST,PUT,DELETE" , "GET,SHOW,PUT,DELETE", 3);
+        addNewQuestion("What is the HTTP code that corresponds to OK?", "199","200","201","202",2);
+        addNewQuestion("What are the 4 pillars of object oriented programming?", "Abstraction,Inheritance,Polymorphism,Encapsulation" , "Statically,Inheritance,Polymorphism,Encapsulation" , "Abstraction,Heritage,Poly,Encapsulation" , "None Of Them" , 1);
+        addNewQuestion("Choose the appropriate data type for this value 5.5","int","double","String","boolean",2);
+        addNewQuestion("Java runs on________","Windows","Linux","Mac’s","All of Them",4);
+
 
     }
 }
