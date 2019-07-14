@@ -1,7 +1,5 @@
 package org.academiadecodigo.codezillas.WhoWhatsBeCodezillaMaster.Questions;
 
-import org.academiadecodigo.bootcamp.scanners.menu.MenuInputScanner;
-
 public class Question {
 
     private int validIndex;

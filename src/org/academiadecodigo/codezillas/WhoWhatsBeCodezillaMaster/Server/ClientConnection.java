@@ -63,22 +63,11 @@ public class ClientConnection implements Runnable {
 
             close();
 
-            //todo: resultado servidor.
-            //todo: tentar ligar os ao mesmo tempo(advanced)
-
         } catch (IOException io) {
             io.getStackTrace();
         } catch (InterruptedException intexcep) {
             System.out.println(intexcep.getMessage());
         }
-    }
-
-    private void listen(BufferedReader playerReader) throws IOException {
-        String message = playerReader.readLine();
-    }
-
-    private Question selection(int questionChased) {
-        return server.getQuestionsBucket().getHashMap().get(questionChased);
     }
 
     private BufferedReader openStreams() throws IOException {
@@ -90,7 +79,6 @@ public class ClientConnection implements Runnable {
         socket.close();
     }
 
-    // adaptar ao prompt???
     public void send(String message) {
         output.println(message);
     }
@@ -104,14 +92,6 @@ public class ClientConnection implements Runnable {
             return "You failed miserably, you didn't pay attention AT ALL!!!\nYOU SUUUUUUUUUUCK\nYou scored: " + score;
         }
         return "You did awesome, you're worthy of the title <Master_Codezilla>\nYou scored: " + score;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public int getScore() {
