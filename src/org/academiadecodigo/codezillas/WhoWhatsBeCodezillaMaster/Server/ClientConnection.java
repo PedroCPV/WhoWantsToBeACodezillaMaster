@@ -30,13 +30,10 @@ public class ClientConnection implements Runnable {
     @Override
     public void run() {
         try {
-
-            if (!server.addClient(this)) {
-
-                System.out.println("You can't play! Try again later!");
-            }
-
             openStreams();
+
+            send("Welcome!\n You are a Player" + server.getPlayers().size());
+
             Prompt prompt = new Prompt(socket.getInputStream(), new PrintStream(socket.getOutputStream()));
             server.getQuestionsBucket().questionsInit();
             HashMap<Integer, Question> allQuestions = server.getQuestionsBucket().getHashMap();
@@ -62,7 +59,10 @@ public class ClientConnection implements Runnable {
                 numOfAnswers++;
             }
 
-            server.winner();
+            send(server.winner());
+
+            close();
+
             //todo: resultado servidor.
             //todo: tentar ligar os ao mesmo tempo(advanced)
 

@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -17,13 +18,14 @@ public class Server {
     private QuestionsBucket questionsBucket;
     private ServerSocket bindSocket;
     private final ExecutorService pool;
-    private final List<ClientConnection> players;
+    private final HashMap<Integer, ClientConnection> players;
+    private int numOfConnections;
 
 
     public Server(QuestionsBucket questionsBucket, int port) throws IOException {
         bindSocket = new ServerSocket(port);
         pool = Executors.newFixedThreadPool(2);
-        players = Collections.synchronizedList(new LinkedList<>());
+        players = new HashMap<>();
         this.questionsBucket = questionsBucket;
     }
 
@@ -43,6 +45,7 @@ public class Server {
 
             Socket clientSocket = bindSocket.accept();
             ClientConnection connection = new ClientConnection(clientSocket, this, DEFAULT_NAME + connections);
+            addClient(connection);
             pool.submit(connection);
 
         } catch (IOException io) {
@@ -52,10 +55,11 @@ public class Server {
 
     public boolean addClient(ClientConnection client) {
         synchronized (players) {
-            if (players.size() > 2) {
+            if (players.size() >= 2) {
                 return false;
             }
-            players.add(client);
+            numOfConnections++;
+            players.put(numOfConnections, client);
             return true;
         }
     }
@@ -80,23 +84,27 @@ public class Server {
     }
 
     public boolean endOfGame() {
-        return (players.get(0).getNumOfAnswers() == ClientConnection.TOTAL_QUESTIONS && players.get(1).getNumOfAnswers() == ClientConnection.TOTAL_QUESTIONS);
+        return (players.get(1).getNumOfAnswers() == ClientConnection.TOTAL_QUESTIONS && players.get(2).getNumOfAnswers() == ClientConnection.TOTAL_QUESTIONS);
     }
 
     public synchronized String winner() throws InterruptedException {
-        notifyAll();
-        wait();
-
-        if (endOfGame()) {
-            if (players.get(1).getScore() == players.get(2).getScore()) {
-                return "It's a draw, what a bummer.";
-            }
-
-            if (players.get(1).getScore() > players.get(2).getScore()) {
-                return "Player 1 won with a score of: " + players.get(1).getScore();
-            }
-            return "Player 2 won with a score of: " + players.get(2).getScore();
+        if (!endOfGame()) {
+            wait();
         }
-        return "Wait for the other player";
+
+        notifyAll();
+
+        if (players.get(1).getScore() == players.get(2).getScore()) {
+            return "It's a draw, what a bummer.\n Player 1 and Player 2 scored: " + players.get(2).getScore();
+        }
+
+        if (players.get(1).getScore() > players.get(2).getScore()) {
+            return "Player 1 won!\nPlayer 1 scored: " + players.get(1).getScore() + "\nPlayer 2 scored: " + players.get(2).getScore();
+        }
+        return "Player 2 won!\nPlayer 1 scored: " + players.get(1).getScore() + "\nPlayer 2 scored: " + players.get(2).getScore();
+    }
+
+    public HashMap<Integer, ClientConnection> getPlayers() {
+        return players;
     }
 }
