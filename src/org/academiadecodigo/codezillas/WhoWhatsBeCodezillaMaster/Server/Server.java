@@ -80,10 +80,8 @@ public class Server {
     public int checkAnswer(int numChooseOption, int questionHasMapID) {
 
         if (numChooseOption == questionsBucket.getHashMap().get(questionHasMapID).getValidIndex()) {
-            System.out.println("rigth");
             return 1;
         } else {
-            System.out.println("wrong");
             return 0;
         }
     }

@@ -15,12 +15,13 @@ public class ClientConnection implements Runnable{
     private Server server;
     private String name;
     private PrintWriter output;
-    private Prompt prompt;
+    private int score;
 
-    public ClientConnection(Socket socket, Server server, String name) throws IOException {
+    public ClientConnection(Socket socket, Server server, String name) {
         this.socket = socket;
         this.server = server;
         this.name = name;
+        score = 0;
     }
 
 
@@ -35,7 +36,7 @@ public class ClientConnection implements Runnable{
             //TODO: test Sout (Delete)
             System.out.println("1");
             openStreams();
-            prompt = new Prompt(socket.getInputStream(), new PrintStream(socket.getOutputStream()));
+            Prompt prompt = new Prompt(socket.getInputStream(), new PrintStream(socket.getOutputStream()));
 
             //TODO: test Sout (Delete)
             System.out.println("2");
@@ -49,7 +50,8 @@ public class ClientConnection implements Runnable{
             //TODO: test Sout (Delete)
             System.out.println(numChoose);
             System.out.println("4");
-            int score = server.checkAnswer(numChoose, question.getValidIndex());
+            score += server.checkAnswer(numChoose, question.getValidIndex());
+            System.out.println(score);
 
             //TODO: test Sout (Delete)
             System.out.println(score);
