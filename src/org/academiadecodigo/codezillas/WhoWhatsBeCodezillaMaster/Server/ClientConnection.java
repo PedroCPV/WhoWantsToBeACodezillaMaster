@@ -72,10 +72,10 @@ public class ClientConnection implements Runnable {
 
 
             StringInputScanner playerName = new StringInputScanner();
-            playerName.setMessage("Hey CODEzilla, what should I call you? ");
+            playerName.setMessage("Hey CODEzilla, what should I call you? \n");
             name = prompt.getUserInput(playerName);
 
-            send("Welcome " + name + "!");
+            send("\nWelcome " + name + "!");
 
             server.getQuestionsBucket().questionsInit();
             HashMap<Integer, Question> allQuestions = server.getQuestionsBucket().getHashMap();
