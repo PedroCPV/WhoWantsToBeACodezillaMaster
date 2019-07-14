@@ -24,6 +24,8 @@ public class QuestionsBucket {
 
     //TODO: Make Questions PEEPS!
     public void questionsInit() {
-        addNewQuestion("pergunta", "A", "B", "C", "D", 2);
+        addNewQuestion("pergunta", "A1", "B1", "C1", "D1", 1);
+        addNewQuestion("pergunta2", "A2", "B2", "C2", "D2", 2);
+        addNewQuestion("pergunta3", "A3", "B3", "C3", "D3", 3);
     }
 }

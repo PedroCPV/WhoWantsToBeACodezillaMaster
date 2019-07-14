@@ -5,17 +5,19 @@ import org.academiadecodigo.bootcamp.scanners.menu.MenuInputScanner;
 import org.academiadecodigo.codezillas.WhoWhatsBeCodezillaMaster.Questions.Question;
 
 import java.io.*;
-import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Scanner;
+import java.util.HashMap;
 
-public class ClientConnection implements Runnable{
+public class ClientConnection implements Runnable {
 
     private Socket socket;
     private Server server;
     private String name;
     private PrintWriter output;
     private int score;
+    private int numOfAnswers;
+    public static final int TOTAL_QUESTIONS = 3;
+
 
     public ClientConnection(Socket socket, Server server, String name) {
         this.socket = socket;
@@ -29,56 +31,54 @@ public class ClientConnection implements Runnable{
     public void run() {
         try {
 
-            if(!server.addClient(this)) {
-                System.out.println("You can't play! Try again later!");;
+            if (!server.addClient(this)) {
+
+                System.out.println("You can't play! Try again later!");
             }
 
-            //TODO: test Sout (Delete)
-            System.out.println("1");
             openStreams();
             Prompt prompt = new Prompt(socket.getInputStream(), new PrintStream(socket.getOutputStream()));
-
-            //TODO: test Sout (Delete)
-            System.out.println("2");
             server.getQuestionsBucket().questionsInit();
-            Question question = selection();
+            HashMap<Integer, Question> allQuestions = server.getQuestionsBucket().getHashMap();
 
-            //TODO: test Sout (Delete)
-            System.out.println("3");
-            int numChoose = prompt.getUserInput(question.getQuestionsMenu());
+            numOfAnswers = 0;
+            while (numOfAnswers < TOTAL_QUESTIONS) {
 
-            //TODO: test Sout (Delete)
-            System.out.println(numChoose);
-            System.out.println("4");
-            score += server.checkAnswer(numChoose, question.getValidIndex());
-            System.out.println(score);
+                int questionChased = server.selectionQuestion();
+                Question question = allQuestions.get(questionChased);
+                MenuInputScanner questionsMenu = new MenuInputScanner(question.getOptions());
+                questionsMenu.setMessage(question.getQuestion());
+                int answer = prompt.getUserInput(questionsMenu);
 
-            //TODO: test Sout (Delete)
-            System.out.println(score);
-            if (score == 1) {
-                send("Nice shot ma Friend");
-            } else {
-                send("Your answer is incorrect!\nThe correct answer is : " + question.getOptions()[numChoose-1]);
+
+                if (server.checkAnswer(answer, questionChased) == 1) {
+
+                    send("GOOD JOB SON -- Nice shot ma Friend");
+                    score++;
+                } else {
+
+                    send("Your answer is incorrect!\nThe correct answer is : " + question.getOptions()[question.getValidIndex() - 1]);
+                }
+                numOfAnswers++;
             }
 
-
-
-            /*while (!socket.isClosed()) {
-                listen(question);
-            }*/
+            server.winner();
+            //todo: resultado servidor.
+            //todo: tentar ligar os ao mesmo tempo(advanced)
 
         } catch (IOException io) {
             io.getStackTrace();
+        } catch (InterruptedException intexcep) {
+            System.out.println(intexcep.getMessage());
         }
     }
 
-    /*
-    private void listen(Question question) throws IOException {
-        String message = question;
-    }*/
+    private void listen(BufferedReader playerReader) throws IOException {
+        String message = playerReader.readLine();
+    }
 
-    private Question selection() {
-        return server.getQuestionsBucket().getHashMap().get(server.selectionQuestion());
+    private Question selection(int questionChased) {
+        return server.getQuestionsBucket().getHashMap().get(questionChased);
     }
 
     private BufferedReader openStreams() throws IOException {
@@ -95,6 +95,17 @@ public class ClientConnection implements Runnable{
         output.println(message);
     }
 
+    public String sendScore() {
+        if (score >= 8 && score < 10) {
+            return "That's a really great score, next summarizer's on you!\nYou scored: " + score;
+        } else if (score >= 4 && score < 8) {
+            return "You did meh, however, use your brain more often and you'll do juuuuust fine... buy everyone a round o' beer to redeem yourself ^^\nYou scored: " + score;
+        } else if (score < 4) {
+            return "You failed miserably, you didn't pay attention AT ALL!!!\nYOU SUUUUUUUUUUCK\nYou scored: " + score;
+        }
+        return "You did awesome, you're worthy of the title <Master_Codezilla>\nYou scored: " + score;
+    }
+
     public String getName() {
         return name;
     }
@@ -103,8 +114,11 @@ public class ClientConnection implements Runnable{
         this.name = name;
     }
 
+    public int getScore() {
+        return score;
+    }
 
-
-
-
+    public int getNumOfAnswers() {
+        return numOfAnswers;
+    }
 }

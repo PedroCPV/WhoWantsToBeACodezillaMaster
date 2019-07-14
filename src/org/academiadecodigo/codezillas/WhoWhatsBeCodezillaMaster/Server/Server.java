@@ -1,50 +1,46 @@
 package org.academiadecodigo.codezillas.WhoWhatsBeCodezillaMaster.Server;
 
-import org.academiadecodigo.codezillas.WhoWhatsBeCodezillaMaster.Questions.Question;
 import org.academiadecodigo.codezillas.WhoWhatsBeCodezillaMaster.Questions.QuestionsBucket;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+@SuppressWarnings("ALL")
 public class Server {
     private static final String DEFAULT_NAME = "player";
     private QuestionsBucket questionsBucket;
     private ServerSocket bindSocket;
     private final ExecutorService pool;
-    private final List<ClientConnection> clients;
+    private final List<ClientConnection> players;
 
 
     public Server(QuestionsBucket questionsBucket, int port) throws IOException {
         bindSocket = new ServerSocket(port);
         pool = Executors.newFixedThreadPool(2);
-        clients = Collections.synchronizedList(new LinkedList<>());
+        players = Collections.synchronizedList(new LinkedList<>());
         this.questionsBucket = questionsBucket;
     }
 
     public void start() {
         int connections = 0;
 
-        while (bindSocket.isBound() && connections < 1) {
-            connections++;
+        while (bindSocket.isBound() && connections < 2) {
 
+            connections++;
             waitConnection(connections);
-            System.out.println("oi" + connections);
         }
 
     }
 
     private void waitConnection(int connections) {
         try {
+
             Socket clientSocket = bindSocket.accept();
             ClientConnection connection = new ClientConnection(clientSocket, this, DEFAULT_NAME + connections);
             pool.submit(connection);
@@ -55,28 +51,21 @@ public class Server {
     }
 
     public boolean addClient(ClientConnection client) {
-        synchronized (clients) {
-            if (clients.size() > 2) {
+        synchronized (players) {
+            if (players.size() > 2) {
                 return false;
             }
-            clients.add(client);
+            players.add(client);
             return true;
         }
     }
 
 
     public int selectionQuestion() {
-
-        int sortQuestion = (int) Math.floor(Math.random() * (questionsBucket.getHashMap().size()) + 1);
-//Main tests
-        questionsBucket.getHashMap().get(sortQuestion);
-        return sortQuestion;
+        return (int) Math.floor(Math.random() * (questionsBucket.getHashMap().size()) + 1);
     }
 
-    //TODO: remove client from list
 
-
-    //TODO: Player input Answer verify (this logic make sense stay in the "game judge")
     public int checkAnswer(int numChooseOption, int questionHasMapID) {
 
         if (numChooseOption == questionsBucket.getHashMap().get(questionHasMapID).getValidIndex()) {
@@ -88,5 +77,26 @@ public class Server {
 
     public QuestionsBucket getQuestionsBucket() {
         return questionsBucket;
+    }
+
+    public boolean endOfGame() {
+        return (players.get(0).getNumOfAnswers() == ClientConnection.TOTAL_QUESTIONS && players.get(1).getNumOfAnswers() == ClientConnection.TOTAL_QUESTIONS);
+    }
+
+    public synchronized String winner() throws InterruptedException {
+        notifyAll();
+        wait();
+
+        if (endOfGame()) {
+            if (players.get(1).getScore() == players.get(2).getScore()) {
+                return "It's a draw, what a bummer.";
+            }
+
+            if (players.get(1).getScore() > players.get(2).getScore()) {
+                return "Player 1 won with a score of: " + players.get(1).getScore();
+            }
+            return "Player 2 won with a score of: " + players.get(2).getScore();
+        }
+        return "Wait for the other player";
     }
 }
