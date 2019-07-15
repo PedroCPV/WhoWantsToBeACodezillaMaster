@@ -96,7 +96,7 @@ public class ClientConnection implements Runnable {
                     score++;
                 } else {
 
-                    send("WTF?! I'm gonna slap you right in your face! \nThe correct answer is : " + question.getOptions()[question.getValidIndex() - 1]);
+                    send("WTF?! I'm gonna slap you right in the face! \nThe correct answer is : " + question.getOptions()[question.getValidIndex() - 1]);
                 }
                 numOfAnswers++;
             }
