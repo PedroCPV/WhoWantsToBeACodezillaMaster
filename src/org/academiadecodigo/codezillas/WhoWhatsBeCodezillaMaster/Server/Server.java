@@ -91,7 +91,7 @@ public class Server {
         notifyAll();
 
         if (players.get(1).getScore() == players.get(2).getScore()) {
-            return "It's a draw, what a bummer.\n" + players.get(1).getName() + "and" + players.get(2).getName() + "scored: " + players.get(2).getScore();
+            return "It's a draw, what a bummer.\n" + players.get(1).getName() + " and " + players.get(2).getName() + " scored: " + players.get(2).getScore();
         }
 
         if (players.get(1).getScore() > players.get(2).getScore()) {
