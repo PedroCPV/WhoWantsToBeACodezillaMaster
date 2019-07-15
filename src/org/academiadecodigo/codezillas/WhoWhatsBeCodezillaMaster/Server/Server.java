@@ -91,12 +91,12 @@ public class Server {
         notifyAll();
 
         if (players.get(1).getScore() == players.get(2).getScore()) {
-            return "It's a draw, what a bummer.\n" + players.get(1).getName() + " and " + players.get(2).getName() + " scored: " + players.get(2).getScore();
+            return "\n\n It's a draw, what a bummer.\n" + players.get(1).getName() + " and " + players.get(2).getName() + " scored: " + players.get(2).getScore();
         }
 
         if (players.get(1).getScore() > players.get(2).getScore()) {
-            return players.get(1).getName() + " won!\n"+ players.get(1).getName() + " scored: " + players.get(1).getScore() + "\n" + players.get(2).getName() +" scored: " + players.get(2).getScore();
+            return "\n\n" + players.get(1).getName() + " won!\n"+ players.get(1).getName() + " scored: " + players.get(1).getScore() + "\n" + players.get(2).getName() +" scored: " + players.get(2).getScore();
         }
-        return players.get(2).getName() + " won!\n"+ players.get(1).getName() + " scored: " + players.get(1).getScore() + "\n" + players.get(2).getName() +" scored: " + players.get(2).getScore();
+        return "\n\n" + players.get(2).getName() + " won!\n"+ players.get(1).getName() + " scored: " + players.get(1).getScore() + "\n" + players.get(2).getName() +" scored: " + players.get(2).getScore();
     }
 }
