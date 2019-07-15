@@ -57,7 +57,7 @@ public class QuestionsBucket {
         addNewQuestion("What is the HTTP code that corresponds to OK?", "199","200","201","202",2);
         addNewQuestion("What are the 4 pillars of object oriented programming?", "Abstraction, Inheritance, Polymorphism, Encapsulation" , "Statically, Inheritance, Polymorphism, Encapsulation" , "Abstraction, Heritage, Poly, Encapsulation" , "None of the above" , 1);
         addNewQuestion("Choose the appropriate data type for this value: 5.5","int","double","String","boolean",2);
-        addNewQuestion("Java runs on________","Windows","Linux","Mac","All of 'em",4);
+        addNewQuestion("Java runs on________","Windows","Linux","Mac","All of the above",4);
 
 
     }
