@@ -17,7 +17,7 @@ public class ClientConnection implements Runnable {
     private PrintWriter output;
     private int score;
     private int numOfAnswers;
-    public static final int TOTAL_QUESTIONS = 3;
+    public static final int TOTAL_QUESTIONS = 5;
 
 
     public ClientConnection(Socket socket, Server server, String name) {
