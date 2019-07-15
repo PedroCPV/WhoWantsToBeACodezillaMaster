@@ -2,6 +2,7 @@ package org.academiadecodigo.codezillas.WhoWhatsBeCodezillaMaster.Server;
 
 import org.academiadecodigo.bootcamp.Prompt;
 import org.academiadecodigo.bootcamp.scanners.menu.MenuInputScanner;
+import org.academiadecodigo.bootcamp.scanners.string.StringInputScanner;
 import org.academiadecodigo.codezillas.WhoWhatsBeCodezillaMaster.Questions.Question;
 
 import java.io.*;
@@ -31,17 +32,58 @@ public class ClientConnection implements Runnable {
     public void run() {
         try {
             openStreams();
-
-            send("Welcome!\n You are a Player" + server.getPlayers().size());
-
             Prompt prompt = new Prompt(socket.getInputStream(), new PrintStream(socket.getOutputStream()));
+
+
+            send(" __    __ _                                 _         _          _                   \n" +
+                    "/ / /\\ \\ \\ |__   ___   __      ____ _ _ __ | |_ ___  | |_ ___   | |__   ___    __ _  \n" +
+                    "\\ \\/  \\/ / '_ \\ / _ \\  \\ \\ /\\ / / _` | '_ \\| __/ __| | __/ _ \\  | '_ \\ / _ \\  / _` | \n" +
+                    " \\  /\\  /| | | | (_) |  \\ V  V / (_| | | | | |_\\__ \\ | || (_) | | |_) |  __/ | (_| | \n" +
+                    "  \\/  \\/ |_| |_|\\___/    \\_/\\_/ \\__,_|_| |_|\\__|___/  \\__\\___/  |_.__/ \\___|  \\__,_| \n" +
+                    "                                                                                     \n" +
+                    "          ___   ___  ___  __    _ _ _                          _                     \n" +
+                    "         / __\\ /___\\/   \\/__\\__(_) | | __ _    /\\/\\   __ _ ___| |_ ___ _ __          \n" +
+                    "        / /   //  // /\\ /_\\|_  / | | |/ _` |  /    \\ / _` / __| __/ _ \\ '__|         \n" +
+                    "       / /___/ \\_// /_///__ / /| | | | (_| | / /\\/\\ \\ (_| \\__ \\ ||  __/ |            \n" +
+                    "       \\____/\\___/___,'\\__//___|_|_|_|\\__,_| \\/    \\/\\__,_|___/\\__\\___|_|            \n" +
+                    "                                                                                     ");
+
+            send(
+                    "                                                    _/ -|  \\_     \n" +
+                    "                                                   (  \\   /  )   \n" +
+                    "                                                     \\ *   * /   \n" +
+                    "                                                    \\     /    \n" +
+                    "                                                      |( \" )|  \n" +
+                    "                                                      | VWV |  \n" +
+                    "                         |\\                         _/      |\n" +
+                    "                         | |                   _-~         \\/\n" +
+                    "                        /  /                _-~  /          |\\\n" +
+                    "                       |  |              _-~    (     /   |/ \n" +
+                    "                      /   /           _-~  __    |   |____|/\n" +
+                    "                     |   |__         / _-~  ~-_  (_______  `\\\n" +
+                    "                     |      ~~--__--~ /  _     \\        __\\)))\n" +
+                    "                      \\               _-~       |     ./  \\\n" +
+                    "                       ~~--__        /         /    _/     |\n" +
+                    "                             ~~--___/       _-_____/      /\n" +
+                    "                              _____/     _-_____/      _-~\n" +
+                    "                           /^<  ___       -____         -____\n" +
+                    "                              ~~   ~~--__      ``\\--__       ``\\\n" +
+                    "                                         ~~--\\)\\)\\)   ~~--\\)\\)\\)");
+
+
+            StringInputScanner playerName = new StringInputScanner();
+            playerName.setMessage("Hey CODEzilla, what should I call you? \n");
+            name = prompt.getUserInput(playerName);
+
+            send("\nWelcome " + name + "!");
+
             server.getQuestionsBucket().questionsInit();
             HashMap<Integer, Question> allQuestions = server.getQuestionsBucket().getHashMap();
 
             numOfAnswers = 0;
             while (numOfAnswers < TOTAL_QUESTIONS) {
 
-                int questionChased = server.selectionQuestion();
+                int questionChased = server.selectQuestion();
                 Question question = allQuestions.get(questionChased);
                 MenuInputScanner questionsMenu = new MenuInputScanner(question.getOptions());
                 questionsMenu.setMessage(question.getQuestion());
@@ -50,11 +92,11 @@ public class ClientConnection implements Runnable {
 
                 if (server.checkAnswer(answer, questionChased) == 1) {
 
-                    send("GOOD JOB SON -- Nice shot ma Friend");
+                    send("GOOD JOB SON");
                     score++;
                 } else {
 
-                    send("Your answer is incorrect!\nThe correct answer is : " + question.getOptions()[question.getValidIndex() - 1]);
+                    send("WTF?! I'm gonna slap you right in the face! \nThe correct answer is : " + question.getOptions()[question.getValidIndex() - 1]);
                 }
                 numOfAnswers++;
             }
@@ -83,22 +125,15 @@ public class ClientConnection implements Runnable {
         output.println(message);
     }
 
-    public String sendScore() {
-        if (score >= 8 && score < 10) {
-            return "That's a really great score, next summarizer's on you!\nYou scored: " + score;
-        } else if (score >= 4 && score < 8) {
-            return "You did meh, however, use your brain more often and you'll do juuuuust fine... buy everyone a round o' beer to redeem yourself ^^\nYou scored: " + score;
-        } else if (score < 4) {
-            return "You failed miserably, you didn't pay attention AT ALL!!!\nYOU SUUUUUUUUUUCK\nYou scored: " + score;
-        }
-        return "You did awesome, you're worthy of the title <Master_Codezilla>\nYou scored: " + score;
-    }
-
     public int getScore() {
         return score;
     }
 
     public int getNumOfAnswers() {
         return numOfAnswers;
+    }
+
+    public String getName() {
+        return name;
     }
 }

@@ -41,7 +41,7 @@ public class Server {
 
             Socket clientSocket = bindSocket.accept();
             ClientConnection connection = new ClientConnection(clientSocket, this, DEFAULT_NAME + connections);
-            addClient(connection);
+            addPlayer(connection);
             pool.submit(connection);
 
         } catch (IOException io) {
@@ -49,7 +49,7 @@ public class Server {
         }
     }
 
-    public boolean addClient(ClientConnection client) {
+    public boolean addPlayer(ClientConnection client) {
         synchronized (players) {
             if (players.size() >= 2) {
                 return false;
@@ -61,7 +61,7 @@ public class Server {
     }
 
 
-    public int selectionQuestion() {
+    public int selectQuestion() {
         return (int) Math.floor(Math.random() * (questionsBucket.getHashMap().size()) + 1);
     }
 
@@ -91,16 +91,12 @@ public class Server {
         notifyAll();
 
         if (players.get(1).getScore() == players.get(2).getScore()) {
-            return "It's a draw, what a bummer.\n Player 1 and Player 2 scored: " + players.get(2).getScore();
+            return "It's a draw, what a bummer.\n" + players.get(1).getName() + "and" + players.get(2).getName() + "scored: " + players.get(2).getScore();
         }
 
         if (players.get(1).getScore() > players.get(2).getScore()) {
-            return "Player 1 won!\nPlayer 1 scored: " + players.get(1).getScore() + "\nPlayer 2 scored: " + players.get(2).getScore();
+            return players.get(1).getName() + " won!\n"+ players.get(1).getName() + " scored: " + players.get(1).getScore() + "\n" + players.get(2).getName() +" scored: " + players.get(2).getScore();
         }
-        return "Player 2 won!\nPlayer 1 scored: " + players.get(1).getScore() + "\nPlayer 2 scored: " + players.get(2).getScore();
-    }
-
-    public HashMap<Integer, ClientConnection> getPlayers() {
-        return players;
+        return players.get(2).getName() + " won!\n"+ players.get(1).getName() + " scored: " + players.get(1).getScore() + "\n" + players.get(2).getName() +" scored: " + players.get(2).getScore();
     }
 }
